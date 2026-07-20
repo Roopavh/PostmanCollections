@@ -1,0 +1,2566 @@
+{
+  "collection": {
+    "_": {
+      "postman_id": "c29ba7cd-e1a0-4399-a6d2-7dbe0cd863c3",
+      "exporter_id": "56384128"
+    },
+    "item": [
+      {
+        "id": "5d3626b3-70c9-47ea-a04d-5ef81ebd6345",
+        "name": "1. CreateUsersWithTestData",
+        "request": {
+          "url": {
+            "path": [
+              "public",
+              "v2",
+              "users"
+            ],
+            "host": [
+              "{{baseURL}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "{{tokenID}}"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"email\": \"apiautomation_{{$randomEmail}}\",\r\n    \"status\": \"{{status}}\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "4acdd070-f0fe-45f3-96d9-2f2a370a2da1",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "pm.test(\"Status code is 201\", function () {\r",
+                "    pm.response.to.have.status(201);\r",
+                "});\r",
+                "\r",
+                "const jsonData = pm.response.json();\r",
+                "\r",
+                "pm.test(\"Check user response data\", function () {\r",
+                "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"name\"));\r",
+                "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));\r",
+                "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));\r",
+                "\r",
+                "    //fetch email from request body\r",
+                "    const rawJSONBody = pm.request.body.raw;// ll be in JSON format\r",
+                "    const requestbody = JSON.parse(rawJSONBody);// parsing JSON to JavaScript object\r",
+                "    const email = requestbody.email.toLowerCase();\r",
+                "    console.log(\"Email id is ===> \" + email);\r",
+                "    pm.expect(jsonData.email).to.eql(email);\r",
+                "\r",
+                "});\r",
+                "\r",
+                "const user_ID = jsonData.id;\r",
+                "pm.variables.set(\"userID\", user_ID);\r",
+                "console.log(\"User ID is ===> \" + user_ID);\r",
+                "\r",
+                "const emailID=jsonData.email.toLowerCase();\r",
+                "pm.variables.set(\"emailID\", emailID);\r",
+                "console.log(\"Email ID is ===> \" + emailID);\r",
+                "\r",
+                "\r",
+                "\r",
+                "\r",
+                "\r",
+                "\r",
+                ""
+              ],
+              "_lastExecutionId": "b614bf77-5d9b-4b5b-8577-5512b0c316e6"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "5f4b5641-bfe3-4160-8776-610b500f95d4",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                ""
+              ],
+              "_lastExecutionId": "7a6d6fd7-2231-4db7-bd4c-29fb73340be4"
+            }
+          }
+        ]
+      },
+      {
+        "id": "9ed2aa8a-ad70-4cc0-b0b1-84ed49b40b9d",
+        "name": "2. UpdateUserDataWithTestData",
+        "request": {
+          "url": {
+            "path": [
+              "public",
+              "v2",
+              "users",
+              "{{userID}}"
+            ],
+            "host": [
+              "{{baseURL}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "{{tokenID}}"
+            }
+          ],
+          "method": "PUT",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"email\": \"{{emailID}}\",\r\n    \"status\": \"{{newStatus}}\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "677bde73-c598-4e69-8599-77e52676efb1",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {\r",
+                "    pm.response.to.have.status(200);\r",
+                "});\r",
+                "\r",
+                "\r",
+                "pm.test(\"Check user status is updated\", function () {\r",
+                "    var jsonData = pm.response.json();\r",
+                "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"newStatus\"));\r",
+                "});\r",
+                "\r",
+                ""
+              ],
+              "_lastExecutionId": "7413451c-344a-47ca-92c4-fb252b515d06"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "717c717b-1b5b-4067-ba0a-3457dada9189",
+              "type": "text/javascript",
+              "packages": {},
+              "exec": [
+                "\r",
+                "// const rawReqBody = pm.request.body.raw;//JSON\r",
+                "// const parsedReqBody = JSON.parse(rawReqBody);//Object\r",
+                "\r",
+                "// parsedReqBody.email = pm.variables.get(emailID);\r",
+                "// console.log(parsedReqBody);\r",
+                "\r",
+                "// pm.request.body.raw = parsedReqBody;\r",
+                "\r",
+                "\r",
+                "\r",
+                "const rawReqBody = pm.request.body.raw;\r",
+                "\r",
+                "const parsedReqBody = JSON.parse(rawReqBody);\r",
+                "\r",
+                "parsedReqBody.email = pm.variables.get(\"emailID\");\r",
+                "\r",
+                "console.log(parsedReqBody);\r",
+                "\r",
+                "pm.request.body.raw = JSON.stringify(parsedReqBody)"
+              ],
+              "_lastExecutionId": "ea3aa1c8-2783-4157-bcb0-313e4a169fe6"
+            }
+          }
+        ]
+      }
+    ],
+    "event": [],
+    "variable": [],
+    "info": {
+      "_postman_id": "c29ba7cd-e1a0-4399-a6d2-7dbe0cd863c3",
+      "name": "1.5 DataDriven",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    }
+  },
+  "environment": {
+    "_": {
+      "postman_variable_scope": "environment",
+      "postman_exported_at": "2026-07-16T08:33:34.842Z",
+      "postman_exported_using": "Postman/12.19.3"
+    },
+    "id": "355ef96b-5f5e-4d10-8c48-ef4d8f9b9911",
+    "name": "GoRestEnv",
+    "values": [
+      {
+        "type": "any",
+        "value": "https://gorest.in",
+        "key": "baseURL"
+      },
+      {
+        "type": "any",
+        "value": "Bearer roopa",
+        "key": "tokenID"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "jsonRequest"
+      }
+    ]
+  },
+  "globals": {
+    "id": "efe91fb1-ec1b-4d46-ba7f-2440e110e93a",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 12,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 12,
+        "pending": 0,
+        "failed": 0
+      },
+      "testScripts": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 6,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 560.8333333333334,
+      "responseMin": 343,
+      "responseMax": 726,
+      "responseSd": 113.5508941204584,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1784357947559,
+      "completed": 1784357951360
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 2,
+          "cycles": 3,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "bb536039-cf6c-4358-a6a3-4b5e85e95299",
+          "httpRequestId": "5661b1a2-6549-4584-be55-7fda0d8e22b5"
+        },
+        "item": {
+          "id": "5d3626b3-70c9-47ea-a04d-5ef81ebd6345",
+          "name": "1. CreateUsersWithTestData",
+          "request": {
+            "url": {
+              "path": [
+                "public",
+                "v2",
+                "users"
+              ],
+              "host": [
+                "{{baseURL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{tokenID}}"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"email\": \"apiautomation_{{$randomEmail}}\",\r\n    \"status\": \"{{status}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "4acdd070-f0fe-45f3-96d9-2f2a370a2da1",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Check user response data\", function () {\r",
+                  "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"name\"));\r",
+                  "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));\r",
+                  "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));\r",
+                  "\r",
+                  "    //fetch email from request body\r",
+                  "    const rawJSONBody = pm.request.body.raw;// ll be in JSON format\r",
+                  "    const requestbody = JSON.parse(rawJSONBody);// parsing JSON to JavaScript object\r",
+                  "    const email = requestbody.email.toLowerCase();\r",
+                  "    console.log(\"Email id is ===> \" + email);\r",
+                  "    pm.expect(jsonData.email).to.eql(email);\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "const user_ID = jsonData.id;\r",
+                  "pm.variables.set(\"userID\", user_ID);\r",
+                  "console.log(\"User ID is ===> \" + user_ID);\r",
+                  "\r",
+                  "const emailID=jsonData.email.toLowerCase();\r",
+                  "pm.variables.set(\"emailID\", emailID);\r",
+                  "console.log(\"Email ID is ===> \" + emailID);\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "_lastExecutionId": "b614bf77-5d9b-4b5b-8577-5512b0c316e6"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "5f4b5641-bfe3-4160-8776-610b500f95d4",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  ""
+                ],
+                "_lastExecutionId": "7a6d6fd7-2231-4db7-bd4c-29fb73340be4"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "public",
+              "v2",
+              "users"
+            ],
+            "host": [
+              "gorest",
+              "in"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer roopa"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "0721c1e1-6fb2-4928-991c-ceb2fe4c4e25",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "gorest.in",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "135",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"name\": \"Vinmayi\",\r\n    \"gender\": \"female\",\r\n    \"email\": \"apiautomation_Dusty_Willms@hotmail.com\",\r\n    \"status\": \"inactive\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "94692c9a-acf0-4d06-b2ba-216608c2ed21",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Content-Length",
+              "value": "115"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Jul 2026 06:59:08 GMT"
+            },
+            {
+              "key": "Etag",
+              "value": "W/\"73-3jPcSTwjCe6dS8zBxMegxHjihmI\""
+            },
+            {
+              "key": "Server",
+              "value": "Vercel"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "X-Ratelimit-Limit",
+              "value": "60"
+            },
+            {
+              "key": "X-Ratelimit-Remaining",
+              "value": "48"
+            },
+            {
+              "key": "X-Ratelimit-Reset",
+              "value": "55"
+            },
+            {
+              "key": "X-Vercel-Cache",
+              "value": "MISS"
+            },
+            {
+              "key": "X-Vercel-Id",
+              "value": "bom1::iad1::2gv9g-1784357948061-dc9c9e242715"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              48,
+              50,
+              52,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              86,
+              105,
+              110,
+              109,
+              97,
+              121,
+              105,
+              34,
+              44,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              97,
+              112,
+              105,
+              97,
+              117,
+              116,
+              111,
+              109,
+              97,
+              116,
+              105,
+              111,
+              110,
+              95,
+              100,
+              117,
+              115,
+              116,
+              121,
+              95,
+              119,
+              105,
+              108,
+              108,
+              109,
+              115,
+              64,
+              104,
+              111,
+              116,
+              109,
+              97,
+              105,
+              108,
+              46,
+              99,
+              111,
+              109,
+              34,
+              44,
+              34,
+              103,
+              101,
+              110,
+              100,
+              101,
+              114,
+              34,
+              58,
+              34,
+              102,
+              101,
+              109,
+              97,
+              108,
+              101,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              105,
+              110,
+              97,
+              99,
+              116,
+              105,
+              118,
+              101,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 726,
+          "responseSize": 115
+        },
+        "id": "5d3626b3-70c9-47ea-a04d-5ef81ebd6345",
+        "assertions": [
+          {
+            "assertion": "Status code is 201",
+            "skipped": false
+          },
+          {
+            "assertion": "Check user response data",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "79d54103-9d98-4319-805b-31d82955528e",
+          "length": 2,
+          "cycles": 3,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "e35976a0-f2c9-482d-a3aa-29e1da28ad8c"
+        },
+        "item": {
+          "id": "9ed2aa8a-ad70-4cc0-b0b1-84ed49b40b9d",
+          "name": "2. UpdateUserDataWithTestData",
+          "request": {
+            "url": {
+              "path": [
+                "public",
+                "v2",
+                "users",
+                "{{userID}}"
+              ],
+              "host": [
+                "{{baseURL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{tokenID}}"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"email\": \"{{emailID}}\",\r\n    \"status\": \"{{newStatus}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "677bde73-c598-4e69-8599-77e52676efb1",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Check user status is updated\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"newStatus\"));\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "_lastExecutionId": "7413451c-344a-47ca-92c4-fb252b515d06"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "717c717b-1b5b-4067-ba0a-3457dada9189",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "\r",
+                  "// const rawReqBody = pm.request.body.raw;//JSON\r",
+                  "// const parsedReqBody = JSON.parse(rawReqBody);//Object\r",
+                  "\r",
+                  "// parsedReqBody.email = pm.variables.get(emailID);\r",
+                  "// console.log(parsedReqBody);\r",
+                  "\r",
+                  "// pm.request.body.raw = parsedReqBody;\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "const rawReqBody = pm.request.body.raw;\r",
+                  "\r",
+                  "const parsedReqBody = JSON.parse(rawReqBody);\r",
+                  "\r",
+                  "parsedReqBody.email = pm.variables.get(\"emailID\");\r",
+                  "\r",
+                  "console.log(parsedReqBody);\r",
+                  "\r",
+                  "pm.request.body.raw = JSON.stringify(parsedReqBody)"
+                ],
+                "_lastExecutionId": "ea3aa1c8-2783-4157-bcb0-313e4a169fe6"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "public",
+              "v2",
+              "users",
+              "1024"
+            ],
+            "host": [
+              "gorest",
+              "in"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer roopa"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "dac4e218-0bfa-4237-8f65-83ac238de5ce",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "gorest.in",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "103",
+              "system": true
+            }
+          ],
+          "method": "PUT",
+          "body": {
+            "mode": "raw",
+            "raw": "{\"name\":\"Vinmayi\",\"gender\":\"female\",\"email\":\"apiautomation_dusty_willms@hotmail.com\",\"status\":\"active\"}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "42457b4b-7d4e-4426-97af-f8476575994f",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Content-Length",
+              "value": "113"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Jul 2026 06:59:08 GMT"
+            },
+            {
+              "key": "Etag",
+              "value": "W/\"71-6iahqoylZo89me8fUOYtevzORXs\""
+            },
+            {
+              "key": "Server",
+              "value": "Vercel"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "X-Ratelimit-Limit",
+              "value": "60"
+            },
+            {
+              "key": "X-Ratelimit-Remaining",
+              "value": "47"
+            },
+            {
+              "key": "X-Ratelimit-Reset",
+              "value": "55"
+            },
+            {
+              "key": "X-Vercel-Cache",
+              "value": "MISS"
+            },
+            {
+              "key": "X-Vercel-Id",
+              "value": "bom1::iad1::cntbf-1784357948510-b918f4839328"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              48,
+              50,
+              52,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              86,
+              105,
+              110,
+              109,
+              97,
+              121,
+              105,
+              34,
+              44,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              97,
+              112,
+              105,
+              97,
+              117,
+              116,
+              111,
+              109,
+              97,
+              116,
+              105,
+              111,
+              110,
+              95,
+              100,
+              117,
+              115,
+              116,
+              121,
+              95,
+              119,
+              105,
+              108,
+              108,
+              109,
+              115,
+              64,
+              104,
+              111,
+              116,
+              109,
+              97,
+              105,
+              108,
+              46,
+              99,
+              111,
+              109,
+              34,
+              44,
+              34,
+              103,
+              101,
+              110,
+              100,
+              101,
+              114,
+              34,
+              58,
+              34,
+              102,
+              101,
+              109,
+              97,
+              108,
+              101,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              97,
+              99,
+              116,
+              105,
+              118,
+              101,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 607,
+          "responseSize": 113
+        },
+        "id": "9ed2aa8a-ad70-4cc0-b0b1-84ed49b40b9d",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Check user status is updated",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "fe1851f7-ddb6-4f94-8281-9a7f0c12bd32",
+          "length": 2,
+          "cycles": 3,
+          "position": 0,
+          "iteration": 1,
+          "cr": true,
+          "httpRequestId": "59c664ad-61af-4e8d-9017-65b3e0436234"
+        },
+        "item": {
+          "id": "5d3626b3-70c9-47ea-a04d-5ef81ebd6345",
+          "name": "1. CreateUsersWithTestData",
+          "request": {
+            "url": {
+              "path": [
+                "public",
+                "v2",
+                "users"
+              ],
+              "host": [
+                "{{baseURL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{tokenID}}"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"email\": \"apiautomation_{{$randomEmail}}\",\r\n    \"status\": \"{{status}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "4acdd070-f0fe-45f3-96d9-2f2a370a2da1",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Check user response data\", function () {\r",
+                  "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"name\"));\r",
+                  "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));\r",
+                  "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));\r",
+                  "\r",
+                  "    //fetch email from request body\r",
+                  "    const rawJSONBody = pm.request.body.raw;// ll be in JSON format\r",
+                  "    const requestbody = JSON.parse(rawJSONBody);// parsing JSON to JavaScript object\r",
+                  "    const email = requestbody.email.toLowerCase();\r",
+                  "    console.log(\"Email id is ===> \" + email);\r",
+                  "    pm.expect(jsonData.email).to.eql(email);\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "const user_ID = jsonData.id;\r",
+                  "pm.variables.set(\"userID\", user_ID);\r",
+                  "console.log(\"User ID is ===> \" + user_ID);\r",
+                  "\r",
+                  "const emailID=jsonData.email.toLowerCase();\r",
+                  "pm.variables.set(\"emailID\", emailID);\r",
+                  "console.log(\"Email ID is ===> \" + emailID);\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "_lastExecutionId": "b614bf77-5d9b-4b5b-8577-5512b0c316e6"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "5f4b5641-bfe3-4160-8776-610b500f95d4",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  ""
+                ],
+                "_lastExecutionId": "7a6d6fd7-2231-4db7-bd4c-29fb73340be4"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "public",
+              "v2",
+              "users"
+            ],
+            "host": [
+              "gorest",
+              "in"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer roopa"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "82d6c5ff-d984-4570-835a-15fe989fc842",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "gorest.in",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "133",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"name\": \"RooVinmayi\",\r\n    \"gender\": \"female\",\r\n    \"email\": \"apiautomation_Everardo7@gmail.com\",\r\n    \"status\": \"inactive\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "5412b5ce-39c9-434d-b396-1c83e8752b47",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Content-Length",
+              "value": "113"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Jul 2026 06:59:09 GMT"
+            },
+            {
+              "key": "Etag",
+              "value": "W/\"71-7B+/mvEQ6FmofoNjPMhPI3FA9pI\""
+            },
+            {
+              "key": "Server",
+              "value": "Vercel"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "X-Ratelimit-Limit",
+              "value": "60"
+            },
+            {
+              "key": "X-Ratelimit-Remaining",
+              "value": "46"
+            },
+            {
+              "key": "X-Ratelimit-Reset",
+              "value": "54"
+            },
+            {
+              "key": "X-Vercel-Cache",
+              "value": "MISS"
+            },
+            {
+              "key": "X-Vercel-Id",
+              "value": "bom1::iad1::jkx4z-1784357949230-82940aaf076f"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              48,
+              50,
+              53,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              82,
+              111,
+              111,
+              86,
+              105,
+              110,
+              109,
+              97,
+              121,
+              105,
+              34,
+              44,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              97,
+              112,
+              105,
+              97,
+              117,
+              116,
+              111,
+              109,
+              97,
+              116,
+              105,
+              111,
+              110,
+              95,
+              101,
+              118,
+              101,
+              114,
+              97,
+              114,
+              100,
+              111,
+              55,
+              64,
+              103,
+              109,
+              97,
+              105,
+              108,
+              46,
+              99,
+              111,
+              109,
+              34,
+              44,
+              34,
+              103,
+              101,
+              110,
+              100,
+              101,
+              114,
+              34,
+              58,
+              34,
+              102,
+              101,
+              109,
+              97,
+              108,
+              101,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              105,
+              110,
+              97,
+              99,
+              116,
+              105,
+              118,
+              101,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 343,
+          "responseSize": 113
+        },
+        "id": "5d3626b3-70c9-47ea-a04d-5ef81ebd6345",
+        "assertions": [
+          {
+            "assertion": "Status code is 201",
+            "skipped": false
+          },
+          {
+            "assertion": "Check user response data",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "0f7b8f07-e956-4b96-9812-871a05fd8fe8",
+          "length": 2,
+          "cycles": 3,
+          "position": 1,
+          "iteration": 1,
+          "httpRequestId": "61840819-bc86-4c9f-b022-22b8224365da"
+        },
+        "item": {
+          "id": "9ed2aa8a-ad70-4cc0-b0b1-84ed49b40b9d",
+          "name": "2. UpdateUserDataWithTestData",
+          "request": {
+            "url": {
+              "path": [
+                "public",
+                "v2",
+                "users",
+                "{{userID}}"
+              ],
+              "host": [
+                "{{baseURL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{tokenID}}"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"email\": \"{{emailID}}\",\r\n    \"status\": \"{{newStatus}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "677bde73-c598-4e69-8599-77e52676efb1",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Check user status is updated\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"newStatus\"));\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "_lastExecutionId": "7413451c-344a-47ca-92c4-fb252b515d06"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "717c717b-1b5b-4067-ba0a-3457dada9189",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "\r",
+                  "// const rawReqBody = pm.request.body.raw;//JSON\r",
+                  "// const parsedReqBody = JSON.parse(rawReqBody);//Object\r",
+                  "\r",
+                  "// parsedReqBody.email = pm.variables.get(emailID);\r",
+                  "// console.log(parsedReqBody);\r",
+                  "\r",
+                  "// pm.request.body.raw = parsedReqBody;\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "const rawReqBody = pm.request.body.raw;\r",
+                  "\r",
+                  "const parsedReqBody = JSON.parse(rawReqBody);\r",
+                  "\r",
+                  "parsedReqBody.email = pm.variables.get(\"emailID\");\r",
+                  "\r",
+                  "console.log(parsedReqBody);\r",
+                  "\r",
+                  "pm.request.body.raw = JSON.stringify(parsedReqBody)"
+                ],
+                "_lastExecutionId": "ea3aa1c8-2783-4157-bcb0-313e4a169fe6"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "public",
+              "v2",
+              "users",
+              "1025"
+            ],
+            "host": [
+              "gorest",
+              "in"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer roopa"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "341a20a9-d58a-4d32-b7a8-9b24be1fcbed",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "gorest.in",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "101",
+              "system": true
+            }
+          ],
+          "method": "PUT",
+          "body": {
+            "mode": "raw",
+            "raw": "{\"name\":\"RooVinmayi\",\"gender\":\"female\",\"email\":\"apiautomation_everardo7@gmail.com\",\"status\":\"active\"}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "72d02f1d-68ad-4600-aa61-41647ab7d247",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Content-Length",
+              "value": "111"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Jul 2026 06:59:09 GMT"
+            },
+            {
+              "key": "Etag",
+              "value": "W/\"6f-Ck5K+kHoqo18wQD1DmNgIEQtaWE\""
+            },
+            {
+              "key": "Server",
+              "value": "Vercel"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "X-Ratelimit-Limit",
+              "value": "60"
+            },
+            {
+              "key": "X-Ratelimit-Remaining",
+              "value": "45"
+            },
+            {
+              "key": "X-Ratelimit-Reset",
+              "value": "53"
+            },
+            {
+              "key": "X-Vercel-Cache",
+              "value": "MISS"
+            },
+            {
+              "key": "X-Vercel-Id",
+              "value": "bom1::iad1::hrt85-1784357949590-94313b461a3c"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              48,
+              50,
+              53,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              82,
+              111,
+              111,
+              86,
+              105,
+              110,
+              109,
+              97,
+              121,
+              105,
+              34,
+              44,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              97,
+              112,
+              105,
+              97,
+              117,
+              116,
+              111,
+              109,
+              97,
+              116,
+              105,
+              111,
+              110,
+              95,
+              101,
+              118,
+              101,
+              114,
+              97,
+              114,
+              100,
+              111,
+              55,
+              64,
+              103,
+              109,
+              97,
+              105,
+              108,
+              46,
+              99,
+              111,
+              109,
+              34,
+              44,
+              34,
+              103,
+              101,
+              110,
+              100,
+              101,
+              114,
+              34,
+              58,
+              34,
+              102,
+              101,
+              109,
+              97,
+              108,
+              101,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              97,
+              99,
+              116,
+              105,
+              118,
+              101,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 554,
+          "responseSize": 111
+        },
+        "id": "9ed2aa8a-ad70-4cc0-b0b1-84ed49b40b9d",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Check user status is updated",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "2433817d-7f77-4c9c-8248-6f7e0b7ad097",
+          "length": 2,
+          "cycles": 3,
+          "position": 0,
+          "iteration": 2,
+          "cr": true,
+          "httpRequestId": "13214882-268b-4a00-9e34-80b50f0b2ee4"
+        },
+        "item": {
+          "id": "5d3626b3-70c9-47ea-a04d-5ef81ebd6345",
+          "name": "1. CreateUsersWithTestData",
+          "request": {
+            "url": {
+              "path": [
+                "public",
+                "v2",
+                "users"
+              ],
+              "host": [
+                "{{baseURL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{tokenID}}"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"email\": \"apiautomation_{{$randomEmail}}\",\r\n    \"status\": \"{{status}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "4acdd070-f0fe-45f3-96d9-2f2a370a2da1",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Check user response data\", function () {\r",
+                  "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"name\"));\r",
+                  "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));\r",
+                  "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));\r",
+                  "\r",
+                  "    //fetch email from request body\r",
+                  "    const rawJSONBody = pm.request.body.raw;// ll be in JSON format\r",
+                  "    const requestbody = JSON.parse(rawJSONBody);// parsing JSON to JavaScript object\r",
+                  "    const email = requestbody.email.toLowerCase();\r",
+                  "    console.log(\"Email id is ===> \" + email);\r",
+                  "    pm.expect(jsonData.email).to.eql(email);\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "const user_ID = jsonData.id;\r",
+                  "pm.variables.set(\"userID\", user_ID);\r",
+                  "console.log(\"User ID is ===> \" + user_ID);\r",
+                  "\r",
+                  "const emailID=jsonData.email.toLowerCase();\r",
+                  "pm.variables.set(\"emailID\", emailID);\r",
+                  "console.log(\"Email ID is ===> \" + emailID);\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "_lastExecutionId": "b614bf77-5d9b-4b5b-8577-5512b0c316e6"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "5f4b5641-bfe3-4160-8776-610b500f95d4",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  ""
+                ],
+                "_lastExecutionId": "7a6d6fd7-2231-4db7-bd4c-29fb73340be4"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "public",
+              "v2",
+              "users"
+            ],
+            "host": [
+              "gorest",
+              "in"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer roopa"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "faf6ff3b-bcc0-4cae-ac5e-b8539f77d8ae",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "gorest.in",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "137",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"name\": \"Vivinmayi\",\r\n    \"gender\": \"female\",\r\n    \"email\": \"apiautomation_Francis_Rice77@gmail.com\",\r\n    \"status\": \"inactive\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "ac5b5ba1-44e0-4d70-9095-f272e3dfadcb",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Content-Length",
+              "value": "117"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Jul 2026 06:59:10 GMT"
+            },
+            {
+              "key": "Etag",
+              "value": "W/\"75-r0KwnOmkQbePafNDJSVeVKpxMXA\""
+            },
+            {
+              "key": "Server",
+              "value": "Vercel"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "X-Ratelimit-Limit",
+              "value": "60"
+            },
+            {
+              "key": "X-Ratelimit-Remaining",
+              "value": "44"
+            },
+            {
+              "key": "X-Ratelimit-Reset",
+              "value": "53"
+            },
+            {
+              "key": "X-Vercel-Cache",
+              "value": "MISS"
+            },
+            {
+              "key": "X-Vercel-Id",
+              "value": "bom1::iad1::fc7cq-1784357950193-0aa1f6111e95"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              48,
+              50,
+              54,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              86,
+              105,
+              118,
+              105,
+              110,
+              109,
+              97,
+              121,
+              105,
+              34,
+              44,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              97,
+              112,
+              105,
+              97,
+              117,
+              116,
+              111,
+              109,
+              97,
+              116,
+              105,
+              111,
+              110,
+              95,
+              102,
+              114,
+              97,
+              110,
+              99,
+              105,
+              115,
+              95,
+              114,
+              105,
+              99,
+              101,
+              55,
+              55,
+              64,
+              103,
+              109,
+              97,
+              105,
+              108,
+              46,
+              99,
+              111,
+              109,
+              34,
+              44,
+              34,
+              103,
+              101,
+              110,
+              100,
+              101,
+              114,
+              34,
+              58,
+              34,
+              102,
+              101,
+              109,
+              97,
+              108,
+              101,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              105,
+              110,
+              97,
+              99,
+              116,
+              105,
+              118,
+              101,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 581,
+          "responseSize": 117
+        },
+        "id": "5d3626b3-70c9-47ea-a04d-5ef81ebd6345",
+        "assertions": [
+          {
+            "assertion": "Status code is 201",
+            "skipped": false
+          },
+          {
+            "assertion": "Check user response data",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "605c816a-b097-4aad-917a-1692170c5fcf",
+          "length": 2,
+          "cycles": 3,
+          "position": 1,
+          "iteration": 2,
+          "httpRequestId": "8c9586ac-def4-449c-b90a-abfeb9a8f59a"
+        },
+        "item": {
+          "id": "9ed2aa8a-ad70-4cc0-b0b1-84ed49b40b9d",
+          "name": "2. UpdateUserDataWithTestData",
+          "request": {
+            "url": {
+              "path": [
+                "public",
+                "v2",
+                "users",
+                "{{userID}}"
+              ],
+              "host": [
+                "{{baseURL}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{tokenID}}"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"gender\": \"{{gender}}\",\r\n    \"email\": \"{{emailID}}\",\r\n    \"status\": \"{{newStatus}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "677bde73-c598-4e69-8599-77e52676efb1",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Check user status is updated\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"newStatus\"));\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "_lastExecutionId": "7413451c-344a-47ca-92c4-fb252b515d06"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "717c717b-1b5b-4067-ba0a-3457dada9189",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "\r",
+                  "// const rawReqBody = pm.request.body.raw;//JSON\r",
+                  "// const parsedReqBody = JSON.parse(rawReqBody);//Object\r",
+                  "\r",
+                  "// parsedReqBody.email = pm.variables.get(emailID);\r",
+                  "// console.log(parsedReqBody);\r",
+                  "\r",
+                  "// pm.request.body.raw = parsedReqBody;\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "const rawReqBody = pm.request.body.raw;\r",
+                  "\r",
+                  "const parsedReqBody = JSON.parse(rawReqBody);\r",
+                  "\r",
+                  "parsedReqBody.email = pm.variables.get(\"emailID\");\r",
+                  "\r",
+                  "console.log(parsedReqBody);\r",
+                  "\r",
+                  "pm.request.body.raw = JSON.stringify(parsedReqBody)"
+                ],
+                "_lastExecutionId": "ea3aa1c8-2783-4157-bcb0-313e4a169fe6"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "public",
+              "v2",
+              "users",
+              "1026"
+            ],
+            "host": [
+              "gorest",
+              "in"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer roopa"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "dc956a6e-b47e-4d13-bedc-d4f251735fdb",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "gorest.in",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "105",
+              "system": true
+            }
+          ],
+          "method": "PUT",
+          "body": {
+            "mode": "raw",
+            "raw": "{\"name\":\"Vivinmayi\",\"gender\":\"female\",\"email\":\"apiautomation_francis_rice77@gmail.com\",\"status\":\"active\"}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "40a0f091-293a-4eee-b346-ad3e8800d8b6",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Content-Length",
+              "value": "115"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Jul 2026 06:59:10 GMT"
+            },
+            {
+              "key": "Etag",
+              "value": "W/\"73-30IOfCObDshYgx7ngVaI+egbtwA\""
+            },
+            {
+              "key": "Server",
+              "value": "Vercel"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "X-Ratelimit-Limit",
+              "value": "60"
+            },
+            {
+              "key": "X-Ratelimit-Remaining",
+              "value": "43"
+            },
+            {
+              "key": "X-Ratelimit-Reset",
+              "value": "52"
+            },
+            {
+              "key": "X-Vercel-Cache",
+              "value": "MISS"
+            },
+            {
+              "key": "X-Vercel-Id",
+              "value": "bom1::iad1::fc7cq-1784357950841-c6daec287178"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              48,
+              50,
+              54,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              86,
+              105,
+              118,
+              105,
+              110,
+              109,
+              97,
+              121,
+              105,
+              34,
+              44,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              97,
+              112,
+              105,
+              97,
+              117,
+              116,
+              111,
+              109,
+              97,
+              116,
+              105,
+              111,
+              110,
+              95,
+              102,
+              114,
+              97,
+              110,
+              99,
+              105,
+              115,
+              95,
+              114,
+              105,
+              99,
+              101,
+              55,
+              55,
+              64,
+              103,
+              109,
+              97,
+              105,
+              108,
+              46,
+              99,
+              111,
+              109,
+              34,
+              44,
+              34,
+              103,
+              101,
+              110,
+              100,
+              101,
+              114,
+              34,
+              58,
+              34,
+              102,
+              101,
+              109,
+              97,
+              108,
+              101,
+              34,
+              44,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              97,
+              99,
+              116,
+              105,
+              118,
+              101,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 554,
+          "responseSize": 115
+        },
+        "id": "9ed2aa8a-ad70-4cc0-b0b1-84ed49b40b9d",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Check user status is updated",
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 684
+    },
+    "failures": [],
+    "error": null
+  }
+}

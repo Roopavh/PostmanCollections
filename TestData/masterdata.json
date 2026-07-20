@@ -1,0 +1,14 @@
+[
+  {
+    "firstname": "Roopa",
+    "lastname": "VH",
+    "totalprice": 100,
+    "depositpaid": true
+  },
+  {
+    "firstname": "Rahul",
+    "lastname": "Sharma",
+    "totalprice": 200,
+    "depositpaid": false
+  }
+]
