@@ -29,7 +29,7 @@ newman run /app/DataDrivenAPICollection.json \
 -r cli,json,html,htmlextra \
 --reporter-htmlextra-export /app/results/gorest-$TIMESTAMP.html \
 --disable-Unicode \
---verbose \
+--verbose 
 
 ls -l /app/results
 
