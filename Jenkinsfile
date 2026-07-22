@@ -30,7 +30,7 @@ pipeline {
             steps {
                 bat '''
         docker run --rm ^
-        -v ${pwd}/newman:/app/results" ^
+        -v "%WORKSPACE%/newman:/app/results" ^
         roopavinmayi/gorestddtest:1.0
         '''
             }
