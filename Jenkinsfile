@@ -28,11 +28,7 @@ pipeline {
 
         stage('Run API Test Cases') {
             steps {
-                bat '''
-        docker run --rm ^
-        -v "%WORKSPACE%/newman:/app/results" ^
-        roopavinmayi/gorestddtest:1.0
-        '''
+                bat 'docker run --rm -v "%WORKSPACE%/newman:/app/results" roopavinmayi/gorestddtest:1.0'
             }
         }
 
@@ -43,7 +39,7 @@ pipeline {
                     alwaysLinkToLastBuild: false,
                     keepAll: true,
                     reportDir: 'newman',
-                    reportFiles: 'gorest.html',
+                    reportFiles: 'NewmanReport.html',
                     reportName: 'HTML Extra API Report',
                     reportTitles: ''
                 ])

@@ -5,10 +5,7 @@ FROM node:26
 WORKDIR /app
 
 # Install Newman and reporters
-RUN npm install -g newman newman-reporter-html newman-reporter-htmlextra
-
-# Create results folder
-RUN mkdir -p /app/results
+RUN npm install -g newman newman-reporter-html newman-reporter-htmlextra newman-reporter-junitfull
 
 # Copy files
 COPY DataDrivenAPICollection.json .
@@ -16,27 +13,15 @@ COPY GoRestEnv.json .
 COPY userdata.csv .
 
 # Execute Newman
-CMD sh -c '
-
-TIMESTAMP=$(date +%Y%m%d%H%M%S)
-
+CMD ["sh", "-c", "\
+TIMESTAMP=$(date +%Y%m%d%H%M%S); \
+mkdir -p /app/results; \
 newman run /app/DataDrivenAPICollection.json \
 -e /app/GoRestEnv.json \
 -d /app/userdata.csv \
 -r cli,htmlextra \
 --reporter-htmlextra-export /app/results/gorest-$TIMESTAMP.html \
 --disable-unicode \
---verbose
-
-echo "====== Generated Reports ======"
-ls -l /app/results
-
-LATEST=$(find /app/results -name "gorest-*.html" | head -n 1)
-
-if [ -n "$LATEST" ]; then
-    cp "$LATEST" /app/results/NewmanReport.html
-    echo "Latest report copied to NewmanReport.html"
-else
-    echo "No report found!"
-fi
-'
+--verbose; \
+LATEST=$(ls -t /app/results/gorest-*.html | head -n 1); \
+if [ -n \"$LATEST\" ]; then cp \"$LATEST\" /app/results/NewmanReport.html; fi"]
