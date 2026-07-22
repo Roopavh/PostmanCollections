@@ -29,10 +29,8 @@ pipeline {
         stage('Run API Test Cases') {
             steps {
                 bat '''
-        if not exist "%WORKSPACE%\\newman" mkdir "%WORKSPACE%\\newman"
-
         docker run --rm ^
-        -v "%WORKSPACE%/newman:/app/results" ^
+        -v ${pwd}/newman:/app/results" ^
         roopavinmayi/gorestddtest:1.0
         '''
             }
