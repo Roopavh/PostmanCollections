@@ -16,4 +16,11 @@ COPY GoRestEnv.json /app/
 COPY userdata.csv /app
 
 # Set the command to run Newman with data-driven testing
-CMD ["newman", "run", "/app/DataDrivenAPICollection.json", "-e", "/app/GoRestEnv.json", "-d","/app/userdata.csv","-r", "cli,json,html,htmlextra", "--reporter-htmlextra-export", "/app/results/gorest.html"]
+CMD sh -c 'mkdir -p /app/results && \
+newman run /app/DataDrivenAPICollection.json \
+-e /app/GoRestEnv.json \
+-d /app/userdata.csv \
+-r cli,json,html,htmlextra \
+--reporter-htmlextra-export /app/results/gorest-$(date +%Y%m%d%H%M%S).html && \
+LATEST=$(ls -t /app/results/gorest-*.html | head -n 1) && \
+cp "$LATEST" /app/results/NewmanReport.html'
