@@ -11,16 +11,19 @@ RUN npm install -g newman newman-reporter-html newman-reporter-htmlextra
 RUN mkdir -p /app/results
 
 # Copy your Postman collection, environment, and data files
-COPY DataDrivenAPICollection.json /app/
-COPY GoRestEnv.json /app/
-COPY userdata.csv /app
+COPY DataDrivenAPICollection.json .
+COPY GoRestEnv.json .
+COPY userdata.csv .
 
 # Set the command to run Newman with data-driven testing
-CMD sh -c 'mkdir -p /app/results && \
-newman run /app/DataDrivenAPICollection.json \
--e /app/GoRestEnv.json \
--d /app/userdata.csv \
--r cli,json,html,htmlextra \
---reporter-htmlextra-export /app/results/gorest-$(date +%Y%m%d%H%M%S).html && \
-LATEST=$(ls -t /app/results/gorest-*.html | head -n 1) && \
+
+# Execute Newman
+CMD sh -c '\
+TIMESTAMP=$(date +%Y%m%d%H%M%S); \
+newman run DataDrivenAPICollection.json \
+-e GoRestEnv.json \
+-d userdata.csv \
+-r cli,json,html,htmlextra,junitfull \
+--reporter-htmlextra-export /app/results/gorest-$TIMESTAMP.html \
+LATEST=$(ls -t /app/results/gorest-*.html | head -n 1); \
 cp "$LATEST" /app/results/NewmanReport.html'
