@@ -1,21 +1,19 @@
-# Use the official Node.js 20 image as the base image
-FROM node:20
+# Use the official Node.js image
+FROM node:26
 
-# Set the working directory in the container
+# Working directory
 WORKDIR /app
 
-# Install Newman and required reporters
+# Install Newman and reporters
 RUN npm install -g newman newman-reporter-html newman-reporter-htmlextra
 
-# Ensure the results directory exists
+# Create results folder
 RUN mkdir -p /app/results
 
-# Copy your Postman collection, environment, and data files
+# Copy files
 COPY DataDrivenAPICollection.json .
 COPY GoRestEnv.json .
 COPY userdata.csv .
-
-# Set the command to run Newman with data-driven testing
 
 # Execute Newman
 CMD sh -c '
@@ -28,14 +26,18 @@ newman run /app/DataDrivenAPICollection.json \
 -d /app/userdata.csv \
 -r cli,json,html,htmlextra \
 --reporter-htmlextra-export /app/results/gorest-$TIMESTAMP.html \
---disable-Unicode \
---verbose 
+--disable-unicode \
+--verbose
 
+echo "====== Generated Reports ======"
 ls -l /app/results
 
 LATEST=$(find /app/results -name "gorest-*.html" | head -n 1)
 
 if [ -n "$LATEST" ]; then
     cp "$LATEST" /app/results/NewmanReport.html
+    echo "Latest report copied to NewmanReport.html"
+else
+    echo "No report found!"
 fi
 '
