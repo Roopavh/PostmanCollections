@@ -17,14 +17,13 @@ COPY userdata.csv .
 
 # Execute Newman
 CMD sh -c '
-mkdir -p /app/results
 
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
 
 newman run /app/DataDrivenAPICollection.json \
 -e /app/GoRestEnv.json \
 -d /app/userdata.csv \
--r cli,json,html,htmlextra \
+-r cli,htmlextra \
 --reporter-htmlextra-export /app/results/gorest-$TIMESTAMP.html \
 --disable-unicode \
 --verbose
