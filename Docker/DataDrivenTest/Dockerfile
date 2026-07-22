@@ -18,12 +18,24 @@ COPY userdata.csv .
 # Set the command to run Newman with data-driven testing
 
 # Execute Newman
-CMD sh -c '\
-TIMESTAMP=$(date +%Y%m%d%H%M%S); \
-newman run DataDrivenAPICollection.json \
--e GoRestEnv.json \
--d userdata.csv \
--r cli,json,html,htmlextra,junitfull \
+CMD sh -c '
+mkdir -p /app/results
+
+TIMESTAMP=$(date +%Y%m%d%H%M%S)
+
+newman run /app/DataDrivenAPICollection.json \
+-e /app/GoRestEnv.json \
+-d /app/userdata.csv \
+-r cli,json,html,htmlextra \
 --reporter-htmlextra-export /app/results/gorest-$TIMESTAMP.html \
-LATEST=$(ls -t /app/results/gorest-*.html | head -n 1); \
-cp "$LATEST" /app/results/NewmanReport.html'
+--disable-Unicode \
+--verbose \
+
+ls -l /app/results
+
+LATEST=$(find /app/results -name "gorest-*.html" | head -n 1)
+
+if [ -n "$LATEST" ]; then
+    cp "$LATEST" /app/results/NewmanReport.html
+fi
+'
