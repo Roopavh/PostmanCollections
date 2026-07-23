@@ -55,7 +55,7 @@ pipeline {
               keepAll: true,
               reportDir: 'newman',
               reportFiles: 'gorest.html',
-              reportName: 'HTML Extra API Report',
+              reportName: 'GoRest API Report',
               reportTitles: ''
             ])
           }
@@ -68,7 +68,7 @@ pipeline {
               keepAll: true,
               reportDir: 'newman',
               reportFiles: 'booking.html',
-              reportName: 'HTML Extra API Report',
+              reportName: 'Booking API Report',
               reportTitles: ''
             ])
           }
