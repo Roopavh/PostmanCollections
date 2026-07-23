@@ -28,7 +28,7 @@ pipeline {
 
         stage('Run API Test Cases') {
             steps {
-                bat 'docker run --rm -v "%WORKSPACE%/newman:/app/results" roopavinmayi/gorestddtest:1.0'
+                bat 'docker run -v $(pwd)/newman:/app/results roopavinmayi/gorestddtest:1.0'
             }
         }
 
