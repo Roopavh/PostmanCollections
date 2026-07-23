@@ -15,4 +15,4 @@ COPY BookingAPIColl.json /app/
 COPY BookingEnv.json /app/
 
 # Set the command to run Newman with data-driven testing
-CMD ["newman", "run", "/app/BookingAPIColl.json", "-e", "/app/BookingEnv.json", "-r", "cli,json,html,htmlextra", "--reporter-htmlextra-export", "/app/results/gorest.html"]
+CMD ["newman", "run", "/app/BookingAPIColl.json", "-e", "/app/BookingEnv.json", "-r", "cli,json,html,htmlextra", "--reporter-htmlextra-export", "/app/results/booking.html"]

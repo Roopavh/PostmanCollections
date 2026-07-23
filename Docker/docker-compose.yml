@@ -1,0 +1,10 @@
+services:
+  gorest:
+    image: roopavinmayi/gorestddtest:1.0
+    volumes:
+      - ./results:/app/results
+
+  booking:
+    image: roopavinmayi/bookingapitest:1.0
+    volumes:
+      - ./results:/app/results
