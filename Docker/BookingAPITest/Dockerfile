@@ -1,5 +1,5 @@
 # Use the official Node.js 20 image as the base image
-FROM node:20
+FROM node:26
 
 # Set the working directory in the container
 WORKDIR /app
@@ -15,4 +15,4 @@ COPY BookingAPIColl.json /app/
 COPY BookingEnv.json /app/
 
 # Set the command to run Newman with data-driven testing
-CMD ["newman", "run", "/app/BookingAPIColl.json.json", "-e", "/app/BookingEnv.json", "-r", "cli,json,html,htmlextra", "--reporter-htmlextra-export", "/app/results/gorest.html"]
+CMD ["newman", "run", "/app/BookingAPIColl.json", "-e", "/app/BookingEnv.json", "-r", "cli,json,html,htmlextra", "--reporter-htmlextra-export", "/app/results/gorest.html"]

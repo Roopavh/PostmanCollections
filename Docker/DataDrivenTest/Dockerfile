@@ -24,4 +24,4 @@ newman run /app/DataDrivenAPICollection.json \
 --disable-unicode \
 --verbose; \
 LATEST=$(ls -t /app/results/gorest-*.html | head -n 1); \
-if [ -n \"$LATEST\" ]; then cp \"$LATEST\" /app/results/NewmanReport.html; fi"]
+if [ -n \"$LATEST\" ]; then cp \"$LATEST\" /app/results/gorest.html; fi"]
